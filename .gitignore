@@ -1,0 +1,17 @@
+# --- MATLAB ---
+*.asv
+*.autosave
+*.fig
+*.mex*
+*.p
+
+# --- Data ---
+*.h5
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+
+# --- Temp files ---
+*.tmp
+*.log
