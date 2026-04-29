@@ -1,7 +1,6 @@
 # --- MATLAB ---
 *.asv
 *.autosave
-*.fig
 *.mex*
 *.p
 
