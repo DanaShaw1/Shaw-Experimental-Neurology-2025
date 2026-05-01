@@ -1,4 +1,6 @@
 function plotViolinComparison(data_T,event_type,scale)
+%Define the column rate name for the given event type
+event_rate_col_name = [event_type,'_rate_min'];
 
 %Find the mouse groups
 [mouse_num, mouse_ID] = findgroups(data_T.Mouse_ID);
@@ -19,7 +21,7 @@ for i = 1:num_mice
     %Define which column to use for rate depending on the event
     if strcmp(event_type,'SR')
         %Get the rates
-        rates = current_mouse_T.SR_rate_min;
+        rates = current_mouse_T.(event_rate_col_name);
 
         %Convert very low rates to a small number for log scale purposes
         rates(find(cell2mat(rates) <= 1e-10)) = {1e-3};
@@ -30,7 +32,7 @@ for i = 1:num_mice
         
     elseif strcmp(event_type,'Spike')
         %Get the rates
-        rates = current_mouse_T.Spike_rate_min;
+        rates = current_mouse_T.(event_rate_col_name);
 
         %Convert very low rates to a small number for log scale purposes
         rates(find(cell2mat(rates) <= 1e-10)) = {1e-2};
@@ -39,9 +41,9 @@ for i = 1:num_mice
         ylim_vals = [0,7];
         ylim_vals_log = [-2,1];
 
-    elseif strcmp(event_type,'Ripple')
+    elseif contains(event_type,'Ripple')
         %Get the rates
-        rates = current_mouse_T.Ripple_rate_min;
+        rates = current_mouse_T.(event_rate_col_name);
 
         %Convert very low rates to a small number for log scale purposes
         rates(find(cell2mat(rates) <= 1e-10)) = {1e-1};
@@ -85,21 +87,21 @@ for i = 1:num_mice
         %Define which column to use for rate depednding on the event
         if strcmp(event_type,'SR')
             %Get rates
-            rates_hemi = current_hemi_T.SR_rate_min;
+            rates_hemi = current_hemi_T.(event_rate_col_name);
 
             %Convert very low rates to a small number for log scale purposes
             rates_hemi(find(cell2mat(rates_hemi) <= 1e-10)) = {1e-3};
 
         elseif strcmp(event_type,'Spike')
             %Get rates
-            rates_hemi = current_hemi_T.Spike_rate_min;
+            rates_hemi = current_hemi_T.(event_rate_col_name);
 
             %Convert very low rates to a small number for log scale purposes
             rates_hemi(find(cell2mat(rates_hemi) <= 1e-10)) = {1e-2};
 
-        elseif strcmp(event_type,'Ripple')
+        elseif contains(event_type,'Ripple')
             %Get rates
-            rates_hemi = current_hemi_T.Ripple_rate_min;
+            rates_hemi = current_hemi_T.(event_rate_col_name);
 
             %Convert very low rates to a small number for log scale purposes
             rates_hemi(find(cell2mat(rates_hemi) <= 1e-10)) = {1e-1};
@@ -125,7 +127,7 @@ for i = 1:num_mice
         
         %Label the color bar
         cb.Label.String = 'Days since stroke';
-        caxis([10 170]);
+        clim([10 170]);
         cb.Location = 'Manual';
        
         %Only display colorbar once
@@ -133,7 +135,6 @@ for i = 1:num_mice
             colorbar off
         end
     end
-    
 end
 
 %Set the dimensions of the figure
