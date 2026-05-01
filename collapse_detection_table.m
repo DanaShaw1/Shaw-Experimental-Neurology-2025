@@ -10,7 +10,11 @@ script_dir = fileparts(mfilename('fullpath'));
 addpath(genpath(script_dir));
 
 %Load in the biomarker detection table
-load(fullfile(script_dir,'Data','All_Biomarker_detection_table.mat'));
+temp = load(fullfile(script_dir,'Data','All_Ripple_detection_table.mat'));
+
+%Rename
+fn = fieldnames(temp);
+data_T = temp.(fn{1});
 
 %% Collapse table within session
 
@@ -62,7 +66,7 @@ data_collapse_T.Hour = [];
 %% Save the table
 
 %Define the save name
-save_name = fullfile(script_dir,'Data','All_Biomarker_collapsed_detection_table.mat');
+save_name = fullfile(script_dir,'Data','All_Ripple_collapsed_detection_table.mat');
 
 %Save table
 save(save_name,'data_collapse_T');
