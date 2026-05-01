@@ -1,9 +1,9 @@
 %Description: Generates plots and stats for Figure S3 and table S3 from 
 %   Shaw et. al. 2025
-
-close all
-clear
-clc
+%
+%Output:
+%   - XXXX_mdl - the linear model fit to the data, contains p-values and
+%       R^2 values used in Tabl S3
 
 close all
 clear
@@ -18,8 +18,8 @@ addpath(genpath(script_dir));
 %Load IHC data -- only contains stroke hemisphere
 load(fullfile(script_dir,'Data','Lesion_IHC_table.mat'))
 
-%Load in the biomarker detection table
-load(fullfile(script_dir,'Data','All_Biomarker_detection_table.mat'));
+%Load in the summarized IHC and biomarker rate table
+load(fullfile(script_dir,'Data','avg_stroke_rates_table.mat'));
 
 % data_T = data_collapse_T;
 %% Estimate volume of lesion
@@ -57,33 +57,11 @@ for i = 1:length(mouse_id)
     volume_T.Lesion_Volume_um{i} = lesion_vol_um;
 end
 
-%% Get average biomarker rates per mouse
+%% Add biomarker rates to the table
 
-%Initialize columns for biomarker rates
-Avg_Spike_Rate = cell(height(volume_T),1);
-Avg_Ripple_Rate = cell(height(volume_T),1);
-Avg_SR_Rate = cell(height(volume_T),1);
+volume_T = [volume_T, avg_rates_T(:,3:5)];
 
-%Add them to the table
-volume_T = [volume_T, table(Avg_Spike_Rate,Avg_Ripple_Rate,Avg_SR_Rate)];
-
-%Go through each mouse
-for i = 1:height(volume_T)
-    %Get the current mouse ID
-    mouse = volume_T.Mouse_ID{i};
-
-    %Get all of the biomarker rates from the stroke hemisphere
-    spike_rates = cell2mat(data_T{strcmp(data_T.Mouse_ID,mouse) & strcmp(data_T.Group,'stroke'),14});
-    ripple_rates = cell2mat(data_T{strcmp(data_T.Mouse_ID,mouse) & strcmp(data_T.Group,'stroke'),17});
-    SR_rates = cell2mat(data_T{strcmp(data_T.Mouse_ID,mouse) & strcmp(data_T.Group,'stroke'),20});
-
-    %Get the average rate across sessions
-    volume_T.Avg_Spike_Rate{i} = mean(spike_rates);
-    volume_T.Avg_Ripple_Rate{i} = mean(ripple_rates);
-    volume_T.Avg_SR_Rate{i} = mean(SR_rates);
-end
-
-%% Plot the lesion volume vs biomarker rate
+%% Plot the lesion volume vs biomarker rate (Figure S3)
 
 spike_mdl = plotLesionVolumeVsBiomarkerRate(volume_T,'Spike');
 ripple_mdl = plotLesionVolumeVsBiomarkerRate(volume_T,'Ripple');

@@ -1,6 +1,6 @@
 function mdl = plotLesionVolumeVsBiomarkerRate(volume_T,event_type)
 %Define the column rate name for the given event type
-event_rate_col_name = ['Avg_',event_type,'_Rate'];
+event_rate_col_name = [event_type,'_Rate_Minute'];
 
 %% Fit model to data
 
